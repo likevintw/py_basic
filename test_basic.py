@@ -2,7 +2,12 @@ import unittest
 import basic
 import os
 
-unittest.TestCase.shortDescription = lambda x: None  # don't show docstring
+'''
+don't show docstring
+unittest.TestCase.shortDescription = lambda x: None 
+'''
+
+unittest.TestCase.shortDescription = lambda x: None
 
 
 class TestBasic(unittest.TestCase):
@@ -143,15 +148,22 @@ class TestBasic(unittest.TestCase):
             for row in result:
                 self.assertEqual(len(row), case.wants[1])
 
-    def test_format(self):
-        '''
-        '''
-        string = "{}".format('Hello')
-        self.assertEqual(string, "Hello")
-        string = "{greeting}".format(greeting="Hello")
-        self.assertEqual(string, "Hello")
-        string = '{first}{second}'.format(first='1', second='2')
+    def test_string_format(self):
+        ''' multiple values '''
+        string = "{} {}".format('Hello World')
+        self.assertEqual(string, "Hello World")
+
+        ''' named index'''
+        string = "{first}{second}".format(first='1', second='2')
         self.assertEqual(string, "12")
+
+        string = "The price is {:.2f} dollars".format(50)
+        self.assertEqual(string, "The price is 50.00 dollars")
+
+        ''' index numbers '''
+        string = "His name is {1}. {1} is {0} years old.".format(
+            20, "John")
+        self.assertEqual(string, "His name is John. John is 20 years old.")
 
     def test_raw_string(self):
         '''
@@ -178,6 +190,16 @@ class TestBasic(unittest.TestCase):
 
         self.assertEqual(import_date, write_data)
         os.remove(filename)
+
+    def show_os_example(self):
+        ''' delete file '''
+        if os.path.exists("demofile.txt"):
+            os.remove("demofile.txt")
+        else:
+            print("The file does not exist")
+
+        ''' delete direct '''
+        os.rmdir("myfolder")
 
 
 if __name__ == '__main__':
