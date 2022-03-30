@@ -1,5 +1,6 @@
 import unittest
 import basic
+import os
 
 unittest.TestCase.shortDescription = lambda x: None  # don't show docstring
 
@@ -161,11 +162,22 @@ class TestBasic(unittest.TestCase):
         raw_string = r'Hi\nHello'
         self.assertNotEqual(string, raw_string)
 
-    def test_read_file(self):  # unfinished
-        pass
-        # with basic.File("file.txt", "w") as f:
-        #     print("export data to the file...")
-        #     f.write("Hello, world.")
+    def test_read_file(self):
+        '''
+        enter exit
+        notice the return of __enter__
+        '''
+        filename = "file.txt"
+        write_data = "Hello, world."
+        import_date = None
+        with basic.File(filename, "w") as f:
+            f.write(write_data)
+
+        with basic.File(filename, 'r') as f:
+            import_date = f.read()
+
+        self.assertEqual(import_date, write_data)
+        os.remove(filename)
 
 
 if __name__ == '__main__':
