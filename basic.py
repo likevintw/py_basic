@@ -111,3 +111,9 @@ class Iterator:
             return self.index
         else:
             raise StopIteration
+
+
+def create_two_dynamic_array(raw, column):
+
+    array = [[0]*column]*raw
+    return array

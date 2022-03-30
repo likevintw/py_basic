@@ -123,6 +123,21 @@ class TestBasic(unittest.TestCase):
         """
         pass
 
+    def test_two_dynamic_array(self):
+        class TestFormat:
+            def __init__(self, args, wants) -> None:
+                self.args = args
+                self.wants = wants
+        cases = []
+        cases.append(TestFormat([5, 3], [5, 3]))
+        cases.append(TestFormat([6, 2], [6, 2]))
+
+        for case in cases:
+            result = basic.create_two_dynamic_array(case.args[0], case.args[1])
+            self.assertEqual(len(result), case.wants[0])
+            for row in result:
+                self.assertEqual(len(row), case.wants[1])
+
 
 if __name__ == '__main__':
     unittest.main()
