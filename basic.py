@@ -68,13 +68,14 @@ class CheckDataExampler:
 
 class EnterExitExampler:
     def __init__(self) -> None:
-        print("__init__")
+        self.message = ["__init__"]
 
     def __enter__(self):
-        print("__enter__")
+        self.message.append("__enter__")
+        return self
 
     def __exit__(self, type, value, traceback):
-        print("__exit__")
+        self.message.append("__exit__")
 
 
 class CallExampler:
@@ -114,6 +115,31 @@ class Iterator:
 
 
 def create_two_dynamic_array(raw, column):
-
     array = [[0]*column]*raw
     return array
+
+
+class File(object):
+    '''
+    enter exit Example
+    '''
+
+    def __init__(self, filename, mode):
+        '''
+        setting filename and mode
+        '''
+        self.filename = filename
+        self.mode = mode
+
+    def __enter__(self):
+        '''
+        open file
+        '''
+        self.open_file = open(self.filename, self.mode)
+        return self.open_file
+
+    def __exit__(self, type, value, traceback):
+        '''
+        close file
+        '''
+        self.open_file.close()

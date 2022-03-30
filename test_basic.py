@@ -67,14 +67,18 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(handler.update_id('123'), False)
         self.assertEqual(handler.update_id('666666'), True)
 
-    def test_exnter_and_exit_example(self):
+    def test_enter_and_exit_example(self):
         """
         __enter__ and __exit__
-        with >> enter >> do something >> exit
+        with >> init >> enter >> do something >> exit
         """
 
         with basic.EnterExitExampler() as handler:
-            print("do_something")
+            handler.message.append("do_something")
+
+        self.assertEqual(
+            handler.message,
+            ['__init__', '__enter__', 'do_something', '__exit__'])
 
     def test_call_example(self):
         """
@@ -137,6 +141,31 @@ class TestBasic(unittest.TestCase):
             self.assertEqual(len(result), case.wants[0])
             for row in result:
                 self.assertEqual(len(row), case.wants[1])
+
+    def test_format(self):
+        '''
+        '''
+        string = "{}".format('Hello')
+        self.assertEqual(string, "Hello")
+        string = "{greeting}".format(greeting="Hello")
+        self.assertEqual(string, "Hello")
+        string = '{first}{second}'.format(first='1', second='2')
+        self.assertEqual(string, "12")
+
+    def test_raw_string(self):
+        '''
+        raw string
+        let string will not be effected with an escape character '\'
+        '''
+        string = 'Hi\nHello'
+        raw_string = r'Hi\nHello'
+        self.assertNotEqual(string, raw_string)
+
+    def test_read_file(self):  # unfinished
+        pass
+        # with basic.File("file.txt", "w") as f:
+        #     print("export data to the file...")
+        #     f.write("Hello, world.")
 
 
 if __name__ == '__main__':
