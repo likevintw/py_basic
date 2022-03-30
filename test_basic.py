@@ -83,6 +83,46 @@ class TestBasic(unittest.TestCase):
         handler = basic.CallExampler()
         self.assertEqual(handler(), True)
 
+    def test_unittest_fail(self):
+        """
+        unittest
+        fail
+        shouldn't happen
+        """
+        try:
+            pass
+        except:
+            self.fail("shouldn't happen")
+
+    def test_annotations(self):
+        """
+        __annotations__
+        basic.get_reminder.__annotations__
+        """
+        pass
+
+    def test_get_attributes(self):
+        """
+        check all of __ type attributes
+        Method 1:
+        handler = basic.EnterExitExampler()
+        print(dir(handler))
+        Method 2:
+        print(hasattr(handler, '__iter__'))
+        """
+        pass
+
+    def test_get_attributes(self):
+        """
+        check all of __ type attributes
+        Method 1:
+        handler = basic.EnterExitExampler()
+        print(dir(handler))
+        Method 2:
+        print(hasattr(handler, '__iter__'))
+        """
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

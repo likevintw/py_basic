@@ -1,6 +1,6 @@
 
 
-def get_reminder(dividend, divisor):
+def get_reminder(dividend: int, divisor: int) -> int:
     '''
     %
     remider
@@ -84,6 +84,7 @@ class CallExampler:
     def __call__(self) -> None:
         return True
 
+
 class ItemExampler:
     def __init__(self, key, value):
         self.classmate = {}
@@ -97,3 +98,16 @@ class ItemExampler:
 
     def __delitem__(self):
         del self.classmate
+
+
+class Iterator:
+    def __init__(self) -> None:
+        self.index = 0
+        self.max = 10
+
+    def __next__(self):
+        if self.index < self.max:
+            self.index += 1
+            return self.index
+        else:
+            raise StopIteration
