@@ -4,13 +4,54 @@ import os
 
 '''
 don't show docstring
-unittest.TestCase.shortDescription = lambda x: None 
+unittest.TestCase.shortDescription = lambda x: None
 '''
 
 unittest.TestCase.shortDescription = lambda x: None
 
 
 class TestBasic(unittest.TestCase):
+
+    def test_datatype(self):  # unfinished
+        ''' 
+        Text Type:	str
+        Numeric Types:	int, float, complex
+        Sequence Types:	list, tuple, range
+        Mapping Type:	dict
+        Set Types:	set, frozenset
+        Boolean Type:	bool
+        Binary Types:	bytes, bytearray, memoryview
+        '''
+        pass
+
+    def test_regular_expression(self):  # unfinished
+        ''' statement '''
+        pass
+
+    def test_boolean(self):  # unfinished
+        ''' statement '''
+        pass
+
+    def test_casting(self):  # unfinished
+        ''' type translation '''
+        pass
+
+    def test_lambda(self):  # unfinished
+        pass
+
+    def test_operator(self):  # unfinished
+        pass
+
+    def test_set(self):  # unfinished
+        pass
+
+    def test_iterator(self):  # unfinished
+        ''' 
+        next, iter
+        iterator and iterable are not the same
+        '''
+        pass
+
     def test_get_reminder(self):
         class TestFormat:
             def __init__(self, args, wants) -> None:
