@@ -34,7 +34,11 @@ class TestBasic(unittest.TestCase):
 
     def test_casting(self):  # unfinished
         ''' type translation '''
-        pass
+        self.assertEqual(int(2.8), 2)
+        self.assertEqual(int("3"), 3)
+        self.assertEqual(float(3), 3.0)
+        self.assertEqual(float("3.2"), 3.2)
+        self.assertEqual(str(3.2), "3.2")
 
     def test_lambda(self):  # unfinished
         pass
@@ -191,7 +195,7 @@ class TestBasic(unittest.TestCase):
 
     def test_string_format(self):
         ''' multiple values '''
-        string = "{} {}".format('Hello World')
+        string = "{} {}".format('Hello', 'World')
         self.assertEqual(string, "Hello World")
 
         ''' named index'''
