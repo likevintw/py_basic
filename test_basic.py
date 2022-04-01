@@ -1,9 +1,11 @@
 import unittest
 import basic
 import os
+import classdemo
+import sys
 
 '''
-don't show docstring
+don't show docstring:
 unittest.TestCase.shortDescription = lambda x: None
 '''
 
@@ -12,8 +14,18 @@ unittest.TestCase.shortDescription = lambda x: None
 
 class TestBasic(unittest.TestCase):
 
+    def test_variable_memoey_comparsion(self):
+        list_float = [0.0]*1000
+        list_int = [0]*1000
+        tuple = (0)*1000
+        string = ""*1000
+        self.assertEqual(sys.getsizeof(list_float), 8056)
+        self.assertEqual(sys.getsizeof(list_int), 8056)
+        self.assertEqual(sys.getsizeof(string), 49)
+        self.assertEqual(sys.getsizeof(tuple), 24)
+
     def test_datatype(self):  # unfinished
-        ''' 
+        '''
         Text Type:	str
         Numeric Types:	int, float, complex
         Sequence Types:	list, tuple, range
@@ -21,6 +33,10 @@ class TestBasic(unittest.TestCase):
         Set Types:	set, frozenset
         Boolean Type:	bool
         Binary Types:	bytes, bytearray, memoryview
+        List is a collection which is ordered and changeable. Allows duplicate members.
+        Tuple is a collection which is ordered and unchangeable. Allows duplicate members.
+        Set is a collection which is unordered, unchangeable*, and unindexed. No duplicate members.
+        Dictionary is a collection which is ordered** and changeable. No duplicate members.
         '''
         pass
 
@@ -28,11 +44,18 @@ class TestBasic(unittest.TestCase):
         ''' statement '''
         pass
 
-    def test_boolean(self):  # unfinished
-        ''' statement '''
-        pass
+    def test_boolean(self):
+        '''
+        isinstance: check instance
+        '''
+        self.assertEqual(bool("Hello"), True)
+        self.assertEqual(bool(15), True)
+        self.assertEqual(10 > 9, True)
+        self.assertEqual(bool(False), False)
+        x = 100
+        self.assertEqual(isinstance(x, int), True)
 
-    def test_casting(self):  # unfinished
+    def test_casting(self):
         ''' type translation '''
         self.assertEqual(int(2.8), 2)
         self.assertEqual(int("3"), 3)
@@ -44,16 +67,6 @@ class TestBasic(unittest.TestCase):
         pass
 
     def test_operator(self):  # unfinished
-        pass
-
-    def test_set(self):  # unfinished
-        pass
-
-    def test_iterator(self):  # unfinished
-        ''' 
-        next, iter
-        iterator and iterable are not the same
-        '''
         pass
 
     def test_get_reminder(self):
@@ -87,13 +100,6 @@ class TestBasic(unittest.TestCase):
             result = basic.show_xor_example(case.args[0], case.args[1])
             self.assertEqual(result, case.wants)
 
-    def test_show_docstring(self):
-        '''
-        Function: basic.get_reminder.__doc__
-        Mehtod: basic.People.__doc__
-        '''
-        pass
-
     def test_show_xor_example(self):
         '''
         class property - encapsulation
@@ -118,26 +124,6 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(handler.update_id('123'), False)
         self.assertEqual(handler.update_id('666666'), True)
 
-    def test_enter_and_exit_example(self):
-        """
-        __enter__ and __exit__
-        with >> init >> enter >> do something >> exit
-        """
-
-        with basic.EnterExitExampler() as handler:
-            handler.message.append("do_something")
-
-        self.assertEqual(
-            handler.message,
-            ['__init__', '__enter__', 'do_something', '__exit__'])
-
-    def test_call_example(self):
-        """
-        __call__ and __exit__
-        """
-        handler = basic.CallExampler()
-        self.assertEqual(handler(), True)
-
     def test_unittest_fail(self):
         """
         unittest
@@ -148,35 +134,6 @@ class TestBasic(unittest.TestCase):
             pass
         except:
             self.fail("shouldn't happen")
-
-    def test_annotations(self):
-        """
-        __annotations__
-        basic.get_reminder.__annotations__
-        """
-        pass
-
-    def test_get_attributes(self):
-        """
-        check all of __ type attributes
-        Method 1:
-        handler = basic.EnterExitExampler()
-        print(dir(handler))
-        Method 2:
-        print(hasattr(handler, '__iter__'))
-        """
-        pass
-
-    def test_get_attributes(self):
-        """
-        check all of __ type attributes
-        Method 1:
-        handler = basic.EnterExitExampler()
-        print(dir(handler))
-        Method 2:
-        print(hasattr(handler, '__iter__'))
-        """
-        pass
 
     def test_two_dynamic_array(self):
         class TestFormat:
@@ -221,8 +178,7 @@ class TestBasic(unittest.TestCase):
 
     def test_read_file(self):
         '''
-        enter exit
-        notice the return of __enter__
+        read file
         '''
         filename = "file.txt"
         write_data = "Hello, world."
@@ -245,6 +201,125 @@ class TestBasic(unittest.TestCase):
 
         ''' delete direct '''
         os.rmdir("myfolder")
+
+    '''
+    datatype
+    '''
+
+    def test_set(self):  # unfinished
+        '''
+        Unordered
+        Unchangeable
+        Duplicates Not Allow
+        '''
+        data = set({"a", "b", "a", "c"})
+        self.assertEqual("c" in data, True)
+
+    def test_tuple(self):
+        '''
+        Orderd
+        Immutable
+        Allow Duplicates
+        '''
+        tup = tuple([1, 5, 7, 9, 3])
+        self.assertEqual(tup[0], 1)
+        try:
+            tup[0] = 1
+            self.fail("shouldn't happen")
+        except:
+            pass
+
+    def test_dictionary(self):
+        table = dict()
+        table['name'] = 'ken'
+        table['age'] = 29
+        table['email'] = 'hello@word.com'
+
+        self.assertEqual(len(table), 3)
+        self.assertEqual(len(table.keys()), 3)
+        self.assertEqual(len(table.values()), 3)
+        self.assertEqual('name' in table.keys(), True)
+        self.assertEqual('ken' in table.values(), True)
+        self.assertEqual(table['name'], 'ken')
+
+        table['name'] = 'may'
+        self.assertEqual(table['name'], 'may')
+
+        table.update({'name': 'wen'})
+        self.assertEqual(table['name'], 'wen')
+
+        table = {
+            'name': 'ken'
+        }
+        self.assertEqual('ken' in table.values(), True)
+
+    '''
+    class
+    '''
+
+    def test_inheritance_private(self):
+        '''
+        private method and attribute can not be inheritance
+        '''
+        b = classdemo.B()
+        self.assertEqual(b.message, ['A.private()', 'B.public()'])
+
+    '''
+    class __
+    '''
+
+    def test_show_docstring(self):
+        '''
+        Function: basic.get_reminder.__doc__
+        Mehtod: basic.People.__doc__
+        '''
+        pass
+
+    def test_enter_and_exit_example(self):
+        """
+        __enter__ and __exit__
+        with >> init >> enter >> do something >> exit
+        """
+
+        with basic.EnterExitExampler() as handler:
+            handler.message.append("do_something")
+
+        self.assertEqual(
+            handler.message,
+            ['__init__', '__enter__', 'do_something', '__exit__'])
+
+    def test_call_example(self):
+        """
+        __call__
+        """
+        handler = basic.CallExampler()
+        self.assertEqual(handler(), True)
+
+    def test_get_attributes(self):
+        """
+        __iter__
+        check all of __ type attributes
+        Method 1:
+        handler = basic.EnterExitExampler()
+        print(dir(handler))
+        Method 2:
+        print(hasattr(handler, '__iter__'))
+        """
+        pass
+
+    def test_iterator(self):  # unfinished
+        '''
+        next, iter
+        iterator and iterable are not the same
+        '''
+        pass
+
+    def test_annotations(self):
+        """
+        __annotations__
+        basic.get_reminder.__annotations__
+        """
+        pass
 
 
 if __name__ == '__main__':
