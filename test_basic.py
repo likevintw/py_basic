@@ -1,3 +1,4 @@
+
 import unittest
 import basic
 import os
@@ -266,14 +267,49 @@ class TestBasic(unittest.TestCase):
     datatype
     '''
 
-    def test_set(self):  # unfinished
+    def test_set(self):
         '''
         Unordered
         Unchangeable
         Duplicates Not Allow
         '''
-        data = set({"a", "b", "a", "c"})
+
+        data = set({"a", "a", "b", "b", "c", "c"})
         self.assertEqual("c" in data, True)
+        self.assertEqual(len(data), 3)
+        data.add("d")
+        self.assertEqual(len(data), 4)
+        data.clear()
+        self.assertEqual(len(data), 0)
+
+        ''' unordered '''
+        flag = True
+        try:
+            self.assertEqual(data[0], 3)
+            flag = False
+        except:
+            pass
+        if not flag:
+            self.fail("shouldn't happen")
+
+        ''' not allow duplicate '''
+        pass
+
+        ''' Intersection '''
+        result = {"a", "b"} & {"b", "c"}
+        self.assertEqual(result, {"b"})
+
+        ''' Union '''
+        result = {"a", "b"} | {"b", "c"}
+        self.assertEqual(result, {"a", "b", "c"})
+
+        ''' Difference '''
+        result = {"a", "b"} - {"b", "c"}
+        self.assertEqual(result, {"a"})
+        x = {"a", "b"}
+        y = {"b", "c"}
+        result = x.difference(y)
+        self.assertEqual(result, {"a"})
 
     def test_tuple(self):
         '''
@@ -325,7 +361,7 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(b.message, ['A.private()', 'B.public()'])
 
     '''
-    class __
+    class __ serial
     '''
 
     def test_show_docstring(self):
