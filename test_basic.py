@@ -24,22 +24,6 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(sys.getsizeof(string), 49)
         self.assertEqual(sys.getsizeof(tuple), 24)
 
-    def test_datatype(self):  # unfinished
-        '''
-        Text Type:	str
-        Numeric Types:	int, float, complex
-        Sequence Types:	list, tuple, range
-        Mapping Type:	dict
-        Set Types:	set, frozenset
-        Boolean Type:	bool
-        Binary Types:	bytes, bytearray, memoryview
-        List is a collection which is ordered and changeable. Allows duplicate members.
-        Tuple is a collection which is ordered and unchangeable. Allows duplicate members.
-        Set is a collection which is unordered, unchangeable*, and unindexed. No duplicate members.
-        Dictionary is a collection which is ordered** and changeable. No duplicate members.
-        '''
-        pass
-
     def test_regular_expression(self):  # unfinished
         ''' statement '''
         pass
@@ -66,8 +50,84 @@ class TestBasic(unittest.TestCase):
     def test_lambda(self):  # unfinished
         pass
 
-    def test_operator(self):  # unfinished
-        pass
+    def test_operator(self):
+        ''' ~ not, inverse bits '''
+        self.assertEqual(~8, -9)
+
+        ''' binary operator '''
+        self.assertEqual(3+2, 5)
+        self.assertEqual(3-2, 1)
+        self.assertEqual(3*2, 6)
+        self.assertEqual(3/2, 1.5)
+        self.assertEqual(33 % 2, 1)
+        ''' exponentiation '''
+        self.assertEqual(3**2, 9)
+        '''	floor division'''
+        self.assertEqual(3//2, 1)
+        ''' & and'''
+        self.assertEqual(3 & 3, 3)
+        ''' | or'''
+        self.assertEqual(3 | 3, 3)
+        ''' ^ xor'''
+        self.assertEqual(3 ^ 3, 0)
+        self.assertEqual(5 == 5, True)
+        self.assertEqual(5 != 5, False)
+        self.assertEqual(not 5 == 5, False)
+        self.assertEqual(5 >= 5, True)
+        self.assertEqual(6 > 5, True)
+        self.assertEqual(6 < 5, False)
+        self.assertEqual(6 in [4, 5], False)
+        self.assertEqual(6 not in [4, 5], True)
+        self.assertEqual(True and True, True)
+        self.assertEqual(True and False, False)
+        self.assertEqual(not False, True)
+        self.assertEqual(True or False, True)
+        self.assertEqual(5 > 4 > 3, True)
+
+        '''
+        x>>1 is equal x*2
+        x<<1 is equal x/2
+        13<<1 is equal x//2
+        '''
+        self.assertEqual(6 >> 1, 3)
+        self.assertEqual(6 >> 2, 1)
+        self.assertEqual(13 >> 1, 6)
+        self.assertEqual(13 >> 2, 3)
+        self.assertEqual(6 << 1, 12)
+        self.assertEqual(6 << 2, 24)
+
+        '''x+=1, x=x+1'''
+        x = 3
+        x += 1
+        self.assertEqual(x, 4)
+        x = 5
+        x -= 2
+        self.assertEqual(x, 3)
+        x = 5
+        x *= 2
+        self.assertEqual(x, 10)
+        x = 50
+        x /= 2
+        self.assertEqual(x, 25)
+        x = 5
+        x %= 2
+        self.assertEqual(x, 1)
+        x = 5
+        x **= 2
+        self.assertEqual(x, 25)
+        x = 52
+        x //= 5
+        self.assertEqual(x, 10)
+        x = 5
+        x &= 5
+        self.assertEqual(x, 5)
+        x = 5
+        x ^= 5
+
+        ''' ternary conditional operator '''
+        status = True
+        flag = True if status else False
+        self.assertEqual(flag, True)
 
     def test_get_reminder(self):
         class TestFormat:

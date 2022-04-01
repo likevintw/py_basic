@@ -10,6 +10,19 @@
 - test_dynamic_check_id: 動態插入function or method
 - test_variable_memoey_comparsion: 查看變數記憶體大小
 ### Data type
+```
+Text Type:	str
+Numeric Types:	int, float, complex
+Sequence Types:	list, tuple, range
+Mapping Type:	dict
+Set Types:	set, frozenset
+Boolean Type:	bool
+Binary Types:	bytes, bytearray, memoryview
+List is a collection which is ordered and changeable. Allows duplicate members.
+Tuple is a collection which is ordered and unchangeable. Allows duplicate members.
+Set is a collection which is unordered, unchangeable*, and unindexed. No duplicate members.
+Dictionary is a collection which is ordered** and changeable. No duplicate members.
+```
 - test_tuple: 序列、不可變、可以複製
 - test_tuple: 序列、不可變、可以複製
 
