@@ -1,4 +1,5 @@
 
+from calendar import c
 import unittest
 import basic
 import os
@@ -6,14 +7,29 @@ import classdemo
 import sys
 
 '''
+python3 -m unittest -v test_basic.py
 don't show docstring:
 unittest.TestCase.shortDescription = lambda x: None
 '''
 
 unittest.TestCase.shortDescription = lambda x: None
 
+variable = 5
+
 
 class TestBasic(unittest.TestCase):
+    
+    def test_while(self):
+        while False:
+            self.fail("Should not happened")
+
+    def test_if_else(self):
+        if False:
+            self.fail("Should not happened")
+        elif False:
+            self.fail("Should not happened")
+        else:
+            pass
 
     def test_variable_memoey_comparsion(self):
         list_float = [0.0]*1000
@@ -48,8 +64,150 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(float("3.2"), 3.2)
         self.assertEqual(str(3.2), "3.2")
 
-    def test_lambda(self):  # unfinished
-        pass
+    def test_scope_nonlocal_variable(self):
+        ''' nonlocal: let inner function to use outer local variable '''
+        variable = 10
+
+        def inner_function():
+            variable = 20
+            return variable+1
+
+        def second_inner_function():
+            nonlocal variable
+            variable = 12
+            return variable+1
+
+        def third_inner_function():
+            global variable
+            return variable+1
+
+        ''' case 1
+        global = 5
+        local = 10
+        local > global, output 10 
+        '''
+        self.assertEqual(variable, 10)
+
+        ''' case 2
+        global = 5
+        local = 10
+        inner = 20, then inner function end, inner is recycled
+        local > global, output 10 
+        '''
+
+        self.assertEqual(inner_function(), 21)
+        self.assertEqual(variable, 10)
+
+        ''' case 3
+        global = 5
+        local = 12
+        keyword nonlocal: let inner inherit local, so inner = local = 12
+        then: innert = local = 12 > global 
+        '''
+        self.assertEqual(second_inner_function(), 13)
+        self.assertEqual(variable, 12)
+        ''' case 4
+        global = 5
+        local = 20 (update by the case 3)
+        keyword global: let inner inherit global, so inner = global = 5
+        inner = local = 12 > global, output 20
+        '''
+        self.assertEqual(third_inner_function(), 6)
+        self.assertEqual(variable, 12)
+
+    def test_check_variable_scope(self):
+        variable = 10
+
+        def get_result():
+            b = 5
+
+            def return_c():
+                c = 1
+                return b+c
+            return variable+return_c()
+        self.assertEqual(get_result(), 16)
+        self.assertEqual('variable' in globals(), True)
+        self.assertEqual('variable' in locals(), True)
+
+    def test_lazy_binding(self):
+        ''' Issue: closure return a funtion'''
+        def return_print_function():
+            result = []
+            for i in range(3):
+                ''' 
+                because python closure is using lazy binding,
+                result should be [fx+0(),fx+1(),fx+2()] 
+                but result = [fx+2(),fx+2(),fx+2()] 
+                '''
+                result.append(lambda x: x+i)
+            return result
+
+        for f in return_print_function():
+            self.assertEqual(f(2), 4)
+
+        ''' solution 1: Factory Template '''
+        def add_n(n):
+            return lambda x: x+n
+
+        def get_add_n_list():
+            '''
+            result=[add_0(),add_1(),add_2()]
+            '''
+            result = []
+            for i in range(3):
+                result.append(add_n(i))
+            return result
+
+        i = 0
+        for f in get_add_n_list():
+            '''
+            loop 1: add_0(1), answer=1+0
+            loop 2: add_1(1), answer=1+1
+            loop 3: add_2(1), answer=1+2
+            '''
+            self.assertEqual(f(1), 1+i)
+            i += 1
+
+        ''' solution 2: Update lambda argument (demo only) 
+        def generate_funcs():
+            funcs = []
+            for i in range(5):
+                funcs.append(lambda i=i: print(i))
+            return funcs
+            
+        for f in generate_funcs():
+            f()
+        '''
+
+        ''' solution 3: Yeild'''
+        def get_add_n_list_thrid():
+            for n in range(3):
+                yield lambda x: x+n
+        i = 0
+        for f in get_add_n_list_thrid():
+            self.assertEqual(f(1), 1+i)
+            i += 1
+
+    def test_lambda(self):
+        self.assertEqual((lambda x, y: x*y)(4, 2), 8)
+        self.assertEqual((lambda x: x)(4), 4)
+
+    def test_closure(self):
+        ''' anonymous function '''
+
+        ''' fundamental '''
+        def two_sum(a, b): return a + b
+        self.assertEqual(two_sum(5, 6), 11)
+        def three_sum(a, b, c): return a + b + c
+        self.assertEqual(three_sum(1, 2, 3), 6)
+
+        ''' lazy binding and closure '''
+        def add_n(n):
+            return lambda input: input + n
+        add_3 = add_n(3)
+        self.assertEqual(add_3(1), 4)
+        add_5 = add_n(5)
+        self.assertEqual(add_5(1), 6)
 
     def test_operator(self):
         ''' ~ not, inverse bits '''
@@ -253,19 +411,43 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(import_date, write_data)
         os.remove(filename)
 
-    def show_os_example(self):
-        ''' delete file '''
+    def test_map(self):
+        def square(x):
+            return x*x
+        self.assertEqual(square(2),  4)
+        self.assertEqual(list(map(square, [1, 2, 3])), [1, 4, 9])
+
+        ''' with lambda'''
+        self.assertEqual(list(map(lambda x: x ** 2, [1, 2, 3])), [1, 4, 9])
+
+    def test_yield(self):#unfinished
+
+        ''' basic '''
+        def countdown(n):
+            i = 0
+            while i < n:
+                i += 1
+                yield i
+        counter = countdown(5)
+        self.assertEqual(next(counter), 1)
+        self.assertEqual(next(counter), 2)
+
+    ''' os serial '''
+
+    def test_run_os_remove(self):
+        ''' remove file '''
         if os.path.exists("demofile.txt"):
             os.remove("demofile.txt")
         else:
-            print("The file does not exist")
+            pass
 
-        ''' delete direct '''
-        os.rmdir("myfolder")
+        ''' remove direct '''
+        if os.path.exists("myfolder"):
+            os.rmdir("myfolder")
+        else:
+            pass
 
-    '''
-    datatype
-    '''
+    ''' datatype '''
 
     def test_set(self):
         '''
@@ -325,6 +507,10 @@ class TestBasic(unittest.TestCase):
         except:
             pass
 
+    def test_list(self):  # unfinished
+        self.assertEqual(all([True, True, True]), True)
+        self.assertEqual(all([True, True, False]), False)
+
     def test_dictionary(self):
         table = dict()
         table['name'] = 'ken'
@@ -349,9 +535,7 @@ class TestBasic(unittest.TestCase):
         }
         self.assertEqual('ken' in table.values(), True)
 
-    '''
-    class
-    '''
+    ''' class '''
 
     def test_inheritance_private(self):
         '''
@@ -360,9 +544,7 @@ class TestBasic(unittest.TestCase):
         b = classdemo.B()
         self.assertEqual(b.message, ['A.private()', 'B.public()'])
 
-    '''
-    class __ serial
-    '''
+    ''' class __ serial '''
 
     def test_show_docstring(self):
         '''
