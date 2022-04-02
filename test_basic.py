@@ -18,7 +18,7 @@ variable = 5
 
 
 class TestBasic(unittest.TestCase):
-    
+
     def test_while(self):
         while False:
             self.fail("Should not happened")
@@ -420,8 +420,7 @@ class TestBasic(unittest.TestCase):
         ''' with lambda'''
         self.assertEqual(list(map(lambda x: x ** 2, [1, 2, 3])), [1, 4, 9])
 
-    def test_yield(self):#unfinished
-
+    def test_yield(self):  # unfinished
         ''' basic '''
         def countdown(n):
             i = 0
@@ -598,6 +597,31 @@ class TestBasic(unittest.TestCase):
         basic.get_reminder.__annotations__
         """
         pass
+
+    def test_structure_and_destructure(self): #unfinished
+        ''' callback and factory template example '''
+
+        ''' first trial '''
+        def callback(data):
+            self.assertEqual(data, "__del__")
+        test = classdemo.StructureDemo(callback)
+        self.assertEqual(test(), "__call__")
+        del test
+
+        ''' second trial '''
+        def callbacl_init(data):
+            self.assertEqual(data, "__init__")
+
+        def callbacl_new(data):
+            self.assertEqual(data, "__new__")
+
+        def callbacl_del(data):
+            self.assertEqual(data, "__del__")
+
+        handler = classdemo.DemoClass(
+            callbacl_init, callbacl_new, callbacl_del)
+        # self.assertEqual(handler(), "__call__")
+        del handler
 
 
 if __name__ == '__main__':
