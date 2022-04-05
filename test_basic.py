@@ -1,9 +1,5 @@
 
-from calendar import c
-from typing import final
 import unittest
-
-from sklearn.metrics import confusion_matrix
 import basic
 import os
 import classdemo
