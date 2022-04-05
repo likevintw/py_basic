@@ -1,5 +1,6 @@
 
 from calendar import c
+from typing import final
 import unittest
 
 from sklearn.metrics import confusion_matrix
@@ -58,6 +59,7 @@ class TestBasic(unittest.TestCase):
         t.join()
         self.assertEqual(len(message), 6)
 
+    @unittest.skip("huge exhausting, but good to go")
     def test_thread_unsafe_object(self):
         counter = basic.Counter()
         threads = []
@@ -69,9 +71,8 @@ class TestBasic(unittest.TestCase):
             t.start()
         for t in threads:
             t.join()
-        
-        self.assertNotEqual(counter.amount,100000)
-        # 730035
+
+        self.assertNotEqual(counter.amount, 100000)
 
     def test_while(self):
         while False:
@@ -404,9 +405,17 @@ class TestBasic(unittest.TestCase):
         shouldn't happen
         """
         try:
+            self.fail("shouldn't happen")
+        except:
+            pass
+
+    def test_error_exception(self):
+        try:
             pass
         except:
-            self.fail("shouldn't happen")
+            pass
+        finally:
+            pass
 
     def test_two_dynamic_array(self):
         class TestFormat:
