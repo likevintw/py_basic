@@ -1,10 +1,14 @@
 
 from calendar import c
 import unittest
+
+from sklearn.metrics import confusion_matrix
 import basic
 import os
 import classdemo
 import sys
+import threading
+import time
 
 '''
 python3 -m unittest -v test_basic.py
@@ -18,6 +22,56 @@ variable = 5
 
 
 class TestBasic(unittest.TestCase):
+
+    def test_nonlocal(self):
+        '''
+        the counter+=1 will be set as a local variable in addone(), so
+        need nonlocal counter to get counter=0 out of function, 
+        or got error in runtime
+        '''
+        counter = 0
+
+        def check():
+            self.assertEqual(counter, 0)
+
+        def addone():
+            nonlocal counter
+            counter += 1
+            self.assertEqual(counter, 1)
+
+        check()
+        addone()
+
+    def test_thread_simple(self):
+        message = []
+
+        def run_child():
+            for i in range(3):
+                message.append("Thread "+str(i))
+                time.sleep(0.1)
+
+        t = threading.Thread(target=run_child)
+        t.start()
+        for i in range(3):
+            message.append("Main "+str(i))
+            time.sleep(0.1)
+        t.join()
+        self.assertEqual(len(message), 6)
+
+    def test_thread_unsafe_object(self):
+        counter = basic.Counter()
+        threads = []
+        for i in range(10):
+            t = threading.Thread(target=counter.add_ten)
+            threads.append(t)
+
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        
+        self.assertNotEqual(counter.amount,100000)
+        # 730035
 
     def test_while(self):
         while False:
@@ -598,7 +652,7 @@ class TestBasic(unittest.TestCase):
         """
         pass
 
-    def test_structure_and_destructure(self): #unfinished
+    def test_structure_and_destructure(self):  # unfinished
         ''' callback and factory template example '''
 
         ''' first trial '''

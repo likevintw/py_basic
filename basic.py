@@ -4,7 +4,7 @@ def get_reminder(dividend: int, divisor: int) -> int:
     '''
     %
     remider
-    (5,3)=2
+    (5,3)=2g
     '''
     return dividend % divisor
 
@@ -143,3 +143,23 @@ class File(object):
         close file
         '''
         self.open_file.close()
+
+
+class BankAccount:
+    def __init__(self, name, password, credit) -> None:
+        self.name = name
+        self.password = password
+        self.credit = credit
+        self.credit_update_history = []
+
+    def update_credit(self, change_credit):
+        self.credit += change_credit
+
+
+class Counter:
+    def __init__(self) -> None:
+        self.amount = 0
+
+    def add_ten(self):
+        for i in range(100000):
+            self.amount += 1
