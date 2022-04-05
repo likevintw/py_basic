@@ -10,6 +10,7 @@ import classdemo
 import sys
 import threading
 import time
+import subprocess
 
 '''
 python3 -m unittest -v test_basic.py
@@ -73,6 +74,12 @@ class TestBasic(unittest.TestCase):
             t.join()
 
         self.assertNotEqual(counter.amount, 100000)
+
+    def test_thread_sychronous_lock(self):  # unfinished
+        pass
+
+    def test_mutex(self):  # unfinished
+        pass
 
     def test_while(self):
         while False:
@@ -508,6 +515,11 @@ class TestBasic(unittest.TestCase):
             os.rmdir("myfolder")
         else:
             pass
+
+    def test_os_return_result(self):
+        result = subprocess.getoutput(
+            "ls|grep test| awk '{print $1}'|grep .py")
+        self.assertEqual(result, "test_basic.py")
 
     ''' datatype '''
 
