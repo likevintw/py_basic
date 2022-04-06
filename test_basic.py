@@ -1,4 +1,5 @@
 
+import copy
 import unittest
 import basic
 import os
@@ -20,6 +21,18 @@ variable = 5
 
 
 class TestBasic(unittest.TestCase):
+
+    def test_mutable(self):
+        data = "Hello"
+        address = id(data)
+        data = "Hello"+"World"
+        self.assertNotEqual(id(data), address)
+
+        del data
+        data=[1,2,3]
+        address = id(data)
+        data.append(4)
+        self.assertEqual(id(data), address)
 
     def test_nonlocal(self):
         '''
@@ -497,6 +510,41 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(next(counter), 1)
         self.assertEqual(next(counter), 2)
 
+    def test_copy_deepcopy(self):
+        ''' assignment, same memory in all of layers'''
+        data = [1, [2, 3]]
+        ref_data = data
+        ref_data.append(5)
+        self.assertEqual(data, ref_data)
+        self.assertEqual(id(data), id(ref_data))
+        ref_data[1].append(4)
+        self.assertEqual(data, ref_data)
+        self.assertEqual(id(data[1]), id(ref_data[1]))
+        del data, ref_data
+
+        ''' 
+        shallow copy
+        the first layers are different, but the deeper are the same memory 
+        '''
+        data = [1, [2, 3]]
+        ref_data = copy.copy(data)
+        ref_data[1].append(4)
+        self.assertEqual(data,  ref_data)
+        self.assertNotEqual(id(data), id(ref_data))
+        self.assertEqual(id(data[1]), id(ref_data[1]))
+        ref_data.append(5)
+        self.assertNotEqual(data,  ref_data)
+        del data, ref_data
+
+        ''' deepcopy, respective memory in each layer '''
+        data = [1, [2, 3]]
+        ref_data = copy.deepcopy(data)
+        ref_data[1].append(4)
+        self.assertNotEqual(data, ref_data)
+        self.assertNotEqual(id(data), id(ref_data))
+        self.assertNotEqual(id(data[1]), id(ref_data[1]))
+        del data, ref_data
+
     ''' os serial '''
 
     def test_run_os_remove(self):
@@ -512,6 +560,7 @@ class TestBasic(unittest.TestCase):
         else:
             pass
 
+    @unittest.skip("test ok, but pass")
     def test_os_return_result(self):
         result = subprocess.getoutput(
             "ls|grep test| awk '{print $1}'|grep .py")
@@ -526,26 +575,29 @@ class TestBasic(unittest.TestCase):
         Duplicates Not Allow
         '''
 
-        data = set({"a", "a", "b", "b", "c", "c"})
-        self.assertEqual("c" in data, True)
+        ''' CRUD '''
+        data = {1, 1, 2, 3}
         self.assertEqual(len(data), 3)
-        data.add("d")
+        data.add(4)
         self.assertEqual(len(data), 4)
+        data.remove(1)
+        self.assertEqual(1 in data, False)
+        self.assertEqual(sum(data), 9)
+        self.assertEqual(max(data), 4)
+        self.assertEqual(min(data), 2)
         data.clear()
         self.assertEqual(len(data), 0)
 
+        ''' remove repeat '''
+        del data
+        data = {"a", "a", "b", "b", "c", "c"}
+        self.assertEqual(len(data), 3)
+
         ''' unordered '''
-        flag = True
         try:
             self.assertEqual(data[0], 3)
-            flag = False
         except:
             pass
-        if not flag:
-            self.fail("shouldn't happen")
-
-        ''' not allow duplicate '''
-        pass
 
         ''' Intersection '''
         result = {"a", "b"} & {"b", "c"}
@@ -563,23 +615,36 @@ class TestBasic(unittest.TestCase):
         result = x.difference(y)
         self.assertEqual(result, {"a"})
 
+        ''' mutable '''
+        del data
+        data = {1, 2, 3}
+        address = id(data)
+        data.add(4)
+        self.assertEqual(id(data), address)
+
     def test_tuple(self):
         '''
-        Orderd
         Immutable
-        Allow Duplicates
         '''
-        tup = tuple([1, 5, 7, 9, 3])
-        self.assertEqual(tup[0], 1)
+        data = tuple([1, 5, 7, 9, 3])
+        self.assertEqual(1 in data, True)
+        self.assertEqual(data[0], 1)
+
+        ''' inorder '''
         try:
-            tup[0] = 1
-            self.fail("shouldn't happen")
+            data[0] = 1
         except:
             pass
 
     def test_list(self):  # unfinished
         self.assertEqual(all([True, True, True]), True)
         self.assertEqual(all([True, True, False]), False)
+        data = []
+
+        ''' mutable '''
+        address = id(data)
+        data.append(1)
+        self.assertEqual(id(data), address)
 
     def test_dictionary(self):
         table = dict()
