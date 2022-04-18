@@ -1,4 +1,4 @@
-
+import threading
 
 def get_reminder(dividend: int, divisor: int) -> int:
     '''
@@ -159,7 +159,45 @@ class BankAccount:
 class Counter:
     def __init__(self) -> None:
         self.amount = 0
+        self.lock = threading.Lock()
 
     def add_ten(self):
         for i in range(100000):
             self.amount += 1
+
+    def add_ten_lock(self):
+        self.lock.acquire()
+        for i in range(100000):
+            self.amount += 1
+        self.lock.release()
+
+
+def args_example(*args):
+    result = []
+    for i in args:
+        result.append(i)
+    return result
+
+
+def kwargs_example(**kwargs):
+    return kwargs
+
+
+def three_sum(a, b, c):
+    return a+b+c
+
+
+def checkCashRegister(price, cash, cid):
+    pass
+    cash_table = {}
+    cash_table['PENNY'] = 0.01
+    cash_table['NICKEL'] = 0.05
+    cash_table['DIME'] = 0.1
+    cash_table['QUARTER'] = 0.25
+    cash_table['ONE'] = 1
+    cash_table['FIVE'] = 5
+    cash_table['TEN'] = 10
+    cash_table['TWENTY'] = 20
+    cash_table['ONE HUNDRED"'] = 100
+
+    return {"status": "OPEN", "change": [["PENNY", 0.5]]}

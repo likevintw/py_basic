@@ -22,17 +22,218 @@ variable = 5
 
 class TestBasic(unittest.TestCase):
 
+    def test_enumerate(self):
+        seq = [1, 2, 3, 4, 5]
+        counter = 0
+        for index, value in enumerate(seq, start=0):
+            self.assertEqual(index, counter)
+            self.assertEqual(value, counter+1)
+            counter += 1
+
+    def test_for_loop(self):
+        ''' 1 '''
+        counter = 0
+        data = []
+        for i in range(3):
+            self.assertEqual(i, counter)
+            counter += 1
+            data.append(i)
+        self.assertEqual(data, [0, 1, 2])
+
+        ''' 2 '''
+        data = [0, 1, 2, 3]
+        counter = 0
+        for i in data:
+            self.assertEqual(i, counter)
+            counter += 1
+
+        ''' 3 '''
+        even_list = [x for x in range(10) if x % 2 == 0]
+        odd_list = [x for x in range(10) if x % 2 == 1]
+        self.assertEqual(even_list, [0, 2, 4, 6, 8])
+        self.assertEqual(odd_list, [1, 3, 5, 7, 9])
+
+        ''' 4 '''
+        result = [True if x % 2 == 0 else False for x in range(4)]
+        self.assertEqual(result, [True, False, True, False])
+
+        ''' 5 '''
+        result = []
+        result += [[x+1] for x in range(4)]
+        self.assertEqual(result, [[1], [2], [3], [4]])
+
+    def test_checkCashRegister(self):  # unfhinished
+        self.assertEqual(
+            basic.checkCashRegister(
+                19.5,
+                20,
+                [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]),
+            {"status": "OPEN", "change": [["PENNY", 0.5]]})
+
+    def test_binary_int_string(self):
+        ''' string '''
+        a = '11'
+        b = '1'
+        ''' string to integral '''
+        self.assertEqual(int(a, 2), 3)
+        self.assertEqual(int(b, 2), 1)
+        ''' int to binary '''
+        self.assertEqual(
+            bin(int(a, 2)+int(b, 2)), '0b100')
+        self.assertEqual(
+            bin(int(a, 2)+int(b, 2))[2:], '100')
+
+    def test_argv(self):
+        result = subprocess.getoutput(
+            "python3 stdin.py 123,11")
+        self.assertEqual(result, "['123', '11']")
+
+    def test_args_and_kwargs(self):
+        ''' Demystified '''
+        ''' *args parameter is flexiable'''
+        self.assertEqual(
+            basic.args_example("hello", 123), ["hello", 123])
+        self.assertEqual(
+            basic.args_example(True, 123, "wow"), [True, 123, "wow"])
+        ''' **kwargs parameter is a flexiable dict'''
+        self.assertEqual(
+            basic.kwargs_example(key="value"), {'key': 'value'})
+        self.assertEqual(
+            basic.kwargs_example(hello="world"), {'hello': 'world'})
+
+        ''' * argment is flexible '''
+        data = [1, 2, 3]
+        self.assertEqual(basic.three_sum(*data), 6)
+        data = (1, 2, 3)
+        self.assertEqual(basic.three_sum(*data), 6)
+
+        ''' ** argment is a flexible dict '''
+        data = {'c': 1, 'b': 2, 'a': 4}
+        self.assertEqual(basic.three_sum(**data), 7)
+
+    def test_monkey_patch(self):
+        ''' break the rule, the editing is not allowed'''
+        class American:
+            def say_hello(self):
+                return "Good Morning, Sir"
+
+        def say_hello_2022():
+            return 'Yo, man'
+        john = American()
+        self.assertEqual(john.say_hello(), "Good Morning, Sir")
+        john.say_hello = say_hello_2022
+        self.assertEqual(john.say_hello(), "Yo, man")
+
+        ''' the regular way to create an interface '''
+        del john
+
+        class American:
+            def say_hello(self):
+                return "Good Morning, Sir"
+
+            def say_hello_2022(self):
+                return 'Yo, man'
+
+        class Behavior:
+            def say_hello(self, people):
+                return people.say_hello()
+
+            def say_hello_2022(self, people):
+                return people.say_hello_2022()
+
+        john = American()
+        behavior = Behavior()
+
+        self.assertEqual(behavior.say_hello(john), 'Good Morning, Sir')
+        self.assertEqual(
+            behavior.say_hello_2022(john),
+            "Yo, man")
+
+    def read_and_readline(self):  # unfinished
+        pass
+
+    def test_split(self):
+        data = "Hello World"
+        self.assertEqual(data.split(" "), ['Hello', 'World'])
+
+    def test_split(self):  # unfinished
+        pass
+
+    def test_decorator(self):  # unfinished
+        pass
+
+    def test_efficiency(self):  # unfinished
+        pass
+
+    def test_zip(self):
+        ''' application 1: two lists to dictionary '''
+        a = ["a", "b", "c"]
+        b = [1, 2, 3]
+        result = dict(zip(a, b))
+        self.assertEqual(result, {'a': 1,  'b': 2, 'c': 3})
+        self.assertEqual(result['a'], 1)
+        self.assertEqual(result['b'], 2)
+        self.assertEqual(result['c'], 3)
+
+    def test_try(self):
+        ''' introduce '''
+        message = ""
+        try:
+            pass
+        except Exception as e:
+            pass
+        else:
+            message = "No Error"
+        finally:
+            self.assertEqual(message, "No Error")
+
+        ''' default Exception '''
+        try:
+            1/0
+        except Exception as e:
+            self.assertEqual(e.args, ('division by zero',))
+        finally:
+            pass
+
+        ''' raise '''
+        try:
+            raise Exception("error massage")
+        except Exception as e:
+            self.assertEqual(e.args, ("error massage",))
+        finally:
+            pass
+
+    def test_show_number_after_point(self):
+        data = 0.823134
+        represent = "%.3f" % (data)
+        self.assertEqual(represent, '0.823')
+        self.assertEqual(round(data, 3), 0.823)
+
     def test_mutable(self):
+        ''' mutable variable, mamoey has expanded, when value is changed '''
+
+        data = [1, 2, 3]
+        address = id(data)
+        data.append(4)
+        self.assertEqual(id(data), address)
+
+        ''' immutable variable, identity is changed when value is changed '''
+        del data
         data = "Hello"
         address = id(data)
         data = "Hello"+"World"
         self.assertNotEqual(id(data), address)
 
-        del data
-        data=[1,2,3]
-        address = id(data)
-        data.append(4)
-        self.assertEqual(id(data), address)
+        ''' immutable variable, identity is changed when value is changed '''
+        a = 1
+        b = 2
+        address_a = id(a)
+        address_b = id(b)
+        a, b = b, a
+        self.assertEqual(a, 2)
+        self.assertEqual(b, 1)
+        self.assertNotEqual(id(a), address_a)
+        self.assertNotEqual(id(b), address_b)
 
     def test_nonlocal(self):
         '''
@@ -53,6 +254,9 @@ class TestBasic(unittest.TestCase):
         check()
         addone()
 
+        self.assertEqual('variable' in globals(), True)
+        self.assertEqual('counter' in locals(), True)
+
     def test_thread_simple(self):
         message = []
 
@@ -69,7 +273,7 @@ class TestBasic(unittest.TestCase):
         t.join()
         self.assertEqual(len(message), 6)
 
-    @unittest.skip("huge exhausting, but good to go")
+    @unittest.skip('huge exhausting, but good to go')
     def test_thread_unsafe_object(self):
         counter = basic.Counter()
         threads = []
@@ -82,10 +286,24 @@ class TestBasic(unittest.TestCase):
         for t in threads:
             t.join()
 
-        self.assertNotEqual(counter.amount, 100000)
+        self.assertNotEqual(counter.amount, 1000000)
+        print('{} is not 1000000'.format(counter.amount))
 
-    def test_thread_sychronous_lock(self):  # unfinished
-        pass
+    @unittest.skip('huge exhausting, but good to go')
+    def test_thread_safe(self):  
+
+        counter = basic.Counter()
+        threads = []
+        for i in range(10):
+            t = threading.Thread(target=counter.add_ten_lock)
+            threads.append(t)
+
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        self.assertEqual(counter.amount, 1000000)
 
     def test_mutex(self):  # unfinished
         pass
@@ -134,57 +352,6 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(float(3), 3.0)
         self.assertEqual(float("3.2"), 3.2)
         self.assertEqual(str(3.2), "3.2")
-
-    def test_scope_nonlocal_variable(self):
-        ''' nonlocal: let inner function to use outer local variable '''
-        variable = 10
-
-        def inner_function():
-            variable = 20
-            return variable+1
-
-        def second_inner_function():
-            nonlocal variable
-            variable = 12
-            return variable+1
-
-        def third_inner_function():
-            global variable
-            return variable+1
-
-        ''' case 1
-        global = 5
-        local = 10
-        local > global, output 10 
-        '''
-        self.assertEqual(variable, 10)
-
-        ''' case 2
-        global = 5
-        local = 10
-        inner = 20, then inner function end, inner is recycled
-        local > global, output 10 
-        '''
-
-        self.assertEqual(inner_function(), 21)
-        self.assertEqual(variable, 10)
-
-        ''' case 3
-        global = 5
-        local = 12
-        keyword nonlocal: let inner inherit local, so inner = local = 12
-        then: innert = local = 12 > global 
-        '''
-        self.assertEqual(second_inner_function(), 13)
-        self.assertEqual(variable, 12)
-        ''' case 4
-        global = 5
-        local = 20 (update by the case 3)
-        keyword global: let inner inherit global, so inner = global = 5
-        inner = local = 12 > global, output 20
-        '''
-        self.assertEqual(third_inner_function(), 6)
-        self.assertEqual(variable, 12)
 
     def test_check_variable_scope(self):
         variable = 10
@@ -390,10 +557,8 @@ class TestBasic(unittest.TestCase):
             result = basic.show_xor_example(case.args[0], case.args[1])
             self.assertEqual(result, case.wants)
 
-    def test_show_xor_example(self):
-        '''
-        class property - encapsulation
-        '''
+    def test_encapsulation(self):
+        ''' class property - encapsulation '''
         handler = basic.PropertyExampler('abc@yahoo.com')
         self.assertEqual(handler.email_special_api, 'abc@yahoo.com')
         handler.email_special_api = 'hello@world.com'
@@ -423,14 +588,6 @@ class TestBasic(unittest.TestCase):
         try:
             self.fail("shouldn't happen")
         except:
-            pass
-
-    def test_error_exception(self):
-        try:
-            pass
-        except:
-            pass
-        finally:
             pass
 
     def test_two_dynamic_array(self):
@@ -639,6 +796,8 @@ class TestBasic(unittest.TestCase):
     def test_list(self):  # unfinished
         self.assertEqual(all([True, True, True]), True)
         self.assertEqual(all([True, True, False]), False)
+        data = [None, None]
+        # while all(i is None for i in data)
         data = []
 
         ''' mutable '''
