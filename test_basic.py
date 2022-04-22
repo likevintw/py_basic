@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 import subprocess
+import multiprocessing
 
 '''
 python3 -m unittest -v test_basic.py
@@ -21,6 +22,21 @@ variable = 5
 
 
 class TestBasic(unittest.TestCase):
+
+    def test_multiprocessing(self):
+        ''' show cpu count '''
+        self.assertEqual(multiprocessing.cpu_count(), 4)
+        ''' show process number '''
+        ps_numbsers = 5
+        queue = multiprocessing.Queue()
+        processes = []
+        for i in range(ps_numbsers):
+            processes.append(multiprocessing.Process(
+                target=basic.show_process))
+        for i in processes:
+            i.start()
+        for i in processes:
+            i.join()
 
     def test_enumerate(self):
         seq = [1, 2, 3, 4, 5]
@@ -83,11 +99,6 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(
             bin(int(a, 2)+int(b, 2))[2:], '100')
 
-    def test_argv(self):
-        result = subprocess.getoutput(
-            "python3 stdin.py 123,11")
-        self.assertEqual(result, "['123', '11']")
-
     def test_args_and_kwargs(self):
         ''' Demystified '''
         ''' *args parameter is flexiable'''
@@ -148,6 +159,11 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(
             behavior.say_hello_2022(john),
             "Yo, man")
+
+    def test_argv(self):
+        result = subprocess.getoutput(
+            "python3 stdin.py 123,11")
+        self.assertEqual(result, "['123', '11']")
 
     def read_and_readline(self):  # unfinished
         pass
@@ -290,7 +306,7 @@ class TestBasic(unittest.TestCase):
         print('{} is not 1000000'.format(counter.amount))
 
     @unittest.skip('huge exhausting, but good to go')
-    def test_thread_safe(self):  
+    def test_thread_safe(self):
 
         counter = basic.Counter()
         threads = []

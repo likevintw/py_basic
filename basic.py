@@ -1,4 +1,6 @@
 import threading
+import os
+
 
 def get_reminder(dividend: int, divisor: int) -> int:
     '''
@@ -185,6 +187,10 @@ def kwargs_example(**kwargs):
 
 def three_sum(a, b, c):
     return a+b+c
+
+
+def show_process(queue):
+    queue.put(os.getpid())
 
 
 def checkCashRegister(price, cash, cid):
