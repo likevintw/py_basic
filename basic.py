@@ -1,5 +1,7 @@
 import threading
 import os
+import time
+import random
 
 
 def get_reminder(dividend: int, divisor: int) -> int:
@@ -189,8 +191,19 @@ def three_sum(a, b, c):
     return a+b+c
 
 
-def show_process(queue):
-    queue.put(os.getpid())
+def add_one(number, lock):
+    print('{} start'.format(os.getpid()))
+    lock.acquire()
+    print('{} start to work'.format(os.getpid()))
+    time.sleep(random.randint(1, 3))
+    try:
+        number.value += 1
+    finally:
+        lock.release()
+
+
+def show_process():
+    print(os.getpid())
 
 
 def checkCashRegister(price, cash, cid):
@@ -207,3 +220,11 @@ def checkCashRegister(price, cash, cid):
     cash_table['ONE HUNDRED"'] = 100
 
     return {"status": "OPEN", "change": [["PENNY", 0.5]]}
+
+
+def producer(pool):
+    pass
+
+
+def consumer(poor):
+    pass

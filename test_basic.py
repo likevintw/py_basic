@@ -9,6 +9,7 @@ import threading
 import time
 import subprocess
 import multiprocessing
+import random
 
 '''
 python3 -m unittest -v test_basic.py
@@ -23,20 +24,53 @@ variable = 5
 
 class TestBasic(unittest.TestCase):
 
-    def test_multiprocessing(self):
+    def test_random(self):
+        self.assertLessEqual(random.random(), 1)
+        self.assertLessEqual(random.randint(0, 10), 10)
+        self.assertLessEqual(random.uniform(1.1, 9.9), 10)
+        self.assertEqual(random.choice('aaa'), 'a')
+        self.assertEqual
+        (random.randrange(1, 2, 2), 1)
+        data = [1, 3, 5, 6, 7,4,6,8,3,2]
+        self.assertNotEqual(random.shuffle(data)  ,data)
+
+    @unittest.skip("ok")
+    def test_multipleprocess_synch_lock(self):
+        ps_number = 10
+
+        workers = []
+        lock = multiprocessing.RLock()
+        n = multiprocessing.Value('i', 0)
+        for i in range(ps_number):
+            workers.append(
+                multiprocessing.Process(
+                    target=basic.add_one,
+                    args=(n, lock)))
+        for i in workers:
+            i.start()
+        for i in workers:
+            i.join()
+        self.assertEqual(n.value, ps_number
+                         )
+
+    @unittest.skip("print(), ok")
+    def test_multiprocess(self):
         ''' show cpu count '''
         self.assertEqual(multiprocessing.cpu_count(), 4)
+
         ''' show process number '''
-        ps_numbsers = 5
-        queue = multiprocessing.Queue()
-        processes = []
-        for i in range(ps_numbsers):
-            processes.append(multiprocessing.Process(
-                target=basic.show_process))
-        for i in processes:
+        ps_number = 10
+        workers = []
+        for i in range(ps_number):
+            workers.append(
+                multiprocessing.Process(
+                    target=basic.show_process))
+        for i in workers:
             i.start()
-        for i in processes:
+        for i in workers:
             i.join()
+        ''' qsize in multiple thread/process is not reliable '''
+        ''' in Mac OS will raise NotImplementedError '''
 
     def test_enumerate(self):
         seq = [1, 2, 3, 4, 5]
