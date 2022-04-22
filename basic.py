@@ -222,9 +222,39 @@ def checkCashRegister(price, cash, cid):
     return {"status": "OPEN", "change": [["PENNY", 0.5]]}
 
 
-def producer(pool):
-    pass
+def produce(queue, lock):
+    lock.acquire()
+    try:
+        print('producer {}'.format(os.getpid()))
+        queue.put(os.getpid())
+    finally:
+        lock.release()
 
 
-def consumer(poor):
-    pass
+def consume(name, queue, lock):
+    lock.acquire()
+    try:
+        print('consumer {} get {} '.format(name, queue.get()))
+        time.sleep(random.randint(3, 5
+                                  ))
+    finally:
+        lock.release()
+
+
+def produce_pool(pool, lock):
+    lock.acquire()
+    try:
+        print('producer {}'.format(os.getpid()))
+        queue.put(os.getpid())
+    finally:
+        lock.release()
+
+
+def consume_pool(name, pool, lock):
+    lock.acquire()
+    try:
+        print('consumer {} get {} '.format(name, queue.get()))
+        time.sleep(random.randint(3, 5
+                                  ))
+    finally:
+        lock.release()

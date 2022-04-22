@@ -24,6 +24,58 @@ variable = 5
 
 class TestBasic(unittest.TestCase):
 
+    def test_multiple_process_pool(self):
+        producers = []
+        workers = []
+        pool = multiprocessing.Queue()
+        lock = multiprocessing.Lock()
+        producer_number = 10
+        worker_number = 3
+        for i in range(producer_number):
+            producers.append(
+                multiprocessing.Process(
+                    target=basic.produce,
+                    args=(queue, lock)))
+        for i in range(worker_number):
+            workers.append(
+                multiprocessing.Process(
+                    target=basic.consume,
+                    args=(str(i), queue, lock)))
+        for i in producers:
+            i.start()
+        for i in workers:
+            i.start()
+        for i in producers:
+            i.join()
+        for i in workers:
+            i.join()
+
+    def test_multiple_process_queue(self):
+        producers = []
+        workers = []
+        queue = multiprocessing.Queue()
+        lock = multiprocessing.Lock()
+        producer_number = 10
+        worker_number = 3
+        for i in range(producer_number):
+            producers.append(
+                multiprocessing.Process(
+                    target=basic.produce,
+                    args=(queue, lock)))
+        for i in range(worker_number):
+            workers.append(
+                multiprocessing.Process(
+                    target=basic.consume,
+                    args=(str(i), queue, lock)))
+        for i in producers:
+            i.start()
+        for i in workers:
+            i.start()
+        for i in producers:
+            i.join()
+        for i in workers:
+            i.join()
+
     def test_random(self):
         self.assertLessEqual(random.random(), 1)
         self.assertLessEqual(random.randint(0, 10), 10)
@@ -31,8 +83,8 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(random.choice('aaa'), 'a')
         self.assertEqual
         (random.randrange(1, 2, 2), 1)
-        data = [1, 3, 5, 6, 7,4,6,8,3,2]
-        self.assertNotEqual(random.shuffle(data)  ,data)
+        data = [1, 3, 5, 6, 7, 4, 6, 8, 3, 2]
+        self.assertNotEqual(random.shuffle(data), data)
 
     @unittest.skip("ok")
     def test_multipleprocess_synch_lock(self):
